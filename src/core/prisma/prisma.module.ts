@@ -1,9 +1,33 @@
 import { Global, Module } from '@nestjs/common';
-import { PrismaService } from './services';
+import {
+  CandidatesDataAccessService,
+  DistrictDataAccessService,
+  PartiesDataAccessService,
+  PrismaService,
+  ProvincesDataAccessService,
+  UsersDataAccessService,
+  VotingDataAccessService,
+} from './services';
 
 @Global()
 @Module({
-  providers: [PrismaService],
-  exports: [PrismaService],
+  providers: [
+    PrismaService,
+    CandidatesDataAccessService,
+    DistrictDataAccessService,
+    ProvincesDataAccessService,
+    UsersDataAccessService,
+    VotingDataAccessService,
+    PartiesDataAccessService,
+  ],
+  exports: [
+    PrismaService,
+    CandidatesDataAccessService,
+    DistrictDataAccessService,
+    ProvincesDataAccessService,
+    UsersDataAccessService,
+    VotingDataAccessService,
+    PartiesDataAccessService,
+  ],
 })
 export class PrismaModule {}

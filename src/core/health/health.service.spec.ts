@@ -20,7 +20,8 @@ describe('HealthService', () => {
         {
           provide: PrismaService,
           useValue: {
-            pingCheck: jest.fn(),
+            onModuleInit: jest.fn(),
+            enableShutdownHooks: jest.fn(),
           },
         },
       ],
@@ -35,8 +36,6 @@ describe('HealthService', () => {
 
     expect(healthService).toBeDefined();
     expect(healthCheckService.check).toHaveBeenCalledTimes(1);
-    expect(healthCheckService.check).toHaveBeenCalledWith([
-      expect.any(Function),
-    ]);
+    expect(healthCheckService.check).toHaveBeenCalledWith([expect.any(Function)]);
   });
 });
