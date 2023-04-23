@@ -22,8 +22,9 @@ export class VotingService {
     const user = await this.findUser(identityCardNumber);
     const candidate = await this.findCandidate(candidateId);
 
-    if (user.districtId !== candidate.districtId)
-      {throw new ForbiddenException('District not match');}
+    if (user.districtId !== candidate.districtId) {
+      throw new ForbiddenException('District not match');
+    }
 
     return this.createVoting({
       userId: user.id,

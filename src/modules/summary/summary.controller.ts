@@ -1,5 +1,5 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'src/common/dto';
 import {
   CandidatesDataAccessService,
@@ -8,6 +8,7 @@ import {
   UsersDataAccessService,
   VotingDataAccessService,
 } from 'src/core/prisma/services';
+import { AuthGuard } from 'src/utils/guards/auth.guard';
 import { CandidateDecorator } from '../candidates/decorator/candidate.decorator';
 import { CandidateResponse } from '../candidates/dto';
 import { DistrictResponse } from '../districts/dto/district.dto';
@@ -15,6 +16,8 @@ import { PartyResponse } from '../parties/dto/party.dto';
 import { CandidateSummaryResponse } from './dto/summary-candidate.dto';
 
 @ApiTags('Summary')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('summary')
 export class SummaryController {
   constructor(
@@ -135,7 +138,7 @@ export class SummaryController {
       totalVoter,
       totalEligibleUser,
       percentage: (totalVoter * 100) / totalEligibleUser,
-      candidate: candidatesWithRanking,
+      candidates: candidatesWithRanking,
     };
   }
 
