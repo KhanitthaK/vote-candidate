@@ -1,16 +1,34 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
+import type { RedisClientOptions } from 'redis';
 import { HealthModule, PrismaModule } from './core';
-import { CandidatesModule } from './modules';
+import {
+  CandidatesModule,
+  DistrictsModule,
+  PartiesModule,
+  SummaryModule,
+  UsersModule,
+  VotingModule,
+} from './modules';
 import { HttpExceptionFilter } from './utils/exceptions';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ expandVariables: true, isGlobal: true }),
+    CacheModule.register<RedisClientOptions>({
+      isGlobal: true,
+      url: 'redis://localhost:6379',
+    }),
     HealthModule,
     PrismaModule,
+    VotingModule,
+    UsersModule,
     CandidatesModule,
+    DistrictsModule,
+    SummaryModule,
+    PartiesModule,
   ],
   providers: [
     {
