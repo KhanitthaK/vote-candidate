@@ -1,6 +1,6 @@
-import { Body, CACHE_MANAGER, Controller, ForbiddenException, Inject, Post } from '@nestjs/common';
+import { Body, Controller, ForbiddenException, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Cache } from 'cache-manager';
+import { RedisService } from 'src/core/redis/redis.service';
 import { SetAvailableTimeRequest, VotingRequest } from './dto';
 import { VotingService } from './voting.service';
 
@@ -9,7 +9,7 @@ import { VotingService } from './voting.service';
 export class VotingController {
   constructor(
     private readonly votingService: VotingService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly redisService: RedisService,
   ) {}
 
   @Post('available')
@@ -19,8 +19,10 @@ export class VotingController {
   @ApiOkResponse({
     description: 'Set Available vote time',
   })
-  setAvailableTime(@Body() { isAvailableTime }: SetAvailableTimeRequest) {
-    return this.cacheManager.set('is-available-time', isAvailableTime.toString());
+  async setAvailableTime(@Body() { isAvailableTime }: SetAvailableTimeRequest) {
+    await this.redisService.setCache('is-available-time', isAvailableTime.toString());
+
+    return { isAvailableTime };
   }
 
   @Post()
@@ -31,7 +33,7 @@ export class VotingController {
     description: 'Vote Candidate',
   })
   async vote(@Body() { identityCardNumber, candidateId }: VotingRequest) {
-    const isAvailable = await this.cacheManager.get('is-available-time');
+    const isAvailable = await this.redisService.getCache('is-available-time');
 
     if (isAvailable !== 'true') throw new ForbiddenException('Unavailable time to vote');
 

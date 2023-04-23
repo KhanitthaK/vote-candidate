@@ -3,7 +3,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import type { RedisClientOptions } from 'redis';
+import { AuthModule } from './auth/auth.module';
 import { HealthModule, PrismaModule } from './core';
+import { RedisModule } from './core/redis/redis.module';
 import {
   CandidatesModule,
   DistrictsModule,
@@ -29,6 +31,8 @@ import { HttpExceptionFilter } from './utils/exceptions';
     DistrictsModule,
     SummaryModule,
     PartiesModule,
+    RedisModule,
+    AuthModule,
   ],
   providers: [
     {
